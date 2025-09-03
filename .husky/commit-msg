@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Validation simple du message de commit
+# Accepte les messages qui commencent par : feat|fix|docs|style|refactor|test|chore
+commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,}'
+
+if ! grep -qE "$commit_regex" "$1"; then
+  echo "❌ Message de commit invalide !"
+  echo "Format attendu: <type>(<scope>): <description>"
+  echo "Types: feat, fix, docs, style, refactor, test, chore"
+  echo "Exemple: feat(auth): add user login functionality"
+  exit 1
+fi

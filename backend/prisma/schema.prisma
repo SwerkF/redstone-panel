@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  CANCELLED
+}
+
+enum ServerType {
+  VANILLA
+  FORGE
+  PAPER
+  FABRIC
+  SPIGOT
+  BUKKIT
+}
+
+enum ServerStatus {
+  CREATING
+  RUNNING
+  STOPPED
+  STOPPING
+  STARTING
+  ERROR
+  DELETED
+}
+
+model User {
+  id            Int                @id @default(autoincrement())
+  email         String             @unique
+  username      String             @unique
+  password      String
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  refreshTokens RefreshToken[]     @relation("UserRefreshTokens")
+  subscriptions UserSubscription[] @relation("UserSubscriptions")
+  servers       Server[]           @relation("UserServers")
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation("UserRefreshTokens", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+// Offres disponibles (plans d'hébergement)
+model Offer {
+  id            Int                @id @default(autoincrement())
+  name          String // ex: "Starter", "Pro", "Premium"
+  description   String?
+  price         Decimal            @db.Decimal(10, 2)
+  cpuLimit      String // ex: "1", "2", "4" (cores)
+  memoryLimitGb Int // RAM en GB
+  storageGb     Int // Stockage en GB
+  maxPlayers    Int // Nombre max de joueurs
+  isActive      Boolean            @default(true)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  subscriptions UserSubscription[]
+
+  @@map("offers")
+}
+
+// Souscriptions des utilisateurs aux offres
+model UserSubscription {
+  id           Int                @id @default(autoincrement())
+  userId       Int
+  offerId      Int
+  status       SubscriptionStatus @default(ACTIVE)
+  subscribedAt DateTime           @default(now())
+  expiresAt    DateTime?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  user   User    @relation("UserSubscriptions", fields: [userId], references: [id], onDelete: Cascade)
+  offer  Offer   @relation(fields: [offerId], references: [id])
+  server Server? @relation("SubscriptionServer")
+
+  @@map("user_subscriptions")
+}
+
+// Serveurs Minecraft déployés
+model Server {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  subscriptionId Int          @unique
+  serverId       String       @unique
+  serverName     String
+  serverType     ServerType   @default(VANILLA)
+  status         ServerStatus @default(CREATING)
+
+  // Informations Kubernetes
+  podName             String? // Nom du pod K8s
+  ipAddress           String? // IP assignée
+  port                Int     @default(25565)
+  kubernetesNamespace String  @default("minecraft-servers")
+
+  // Configuration serveur
+  serverProperties Json? // server.properties et autres configs
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastStarted DateTime?
+  lastStopped DateTime?
+
+  // Relations
+  user         User             @relation("UserServers", fields: [userId], references: [id], onDelete: Cascade)
+  subscription UserSubscription @relation("SubscriptionServer", fields: [subscriptionId], references: [id], onDelete: Cascade)
+  settings     ServerSettings[]
+  stats        ServerStats[]
+
+  @@map("servers")
+}
+
+model ServerSettings {
+  id        Int      @id @default(autoincrement())
+  serverId  Int
+  settings  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  server    Server   @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  @@map("server_settings")
+}
+
+// Statistiques et monitoring des serveurs
+model ServerStats {
+  id            Int      @id @default(autoincrement())
+  serverId      Int
+  playersOnline Int      @default(0)
+  cpuUsage      Decimal? @db.Decimal(5, 2) // Pourcentage d'utilisation CPU
+  memoryUsage   Decimal? @db.Decimal(5, 2) // Pourcentage d'utilisation mémoire
+  diskUsage     Decimal? @db.Decimal(5, 2) // Pourcentage d'utilisation disque
+  networkIn     BigInt? // Bytes entrants
+  networkOut    BigInt? // Bytes sortants
+  recordedAt    DateTime @default(now())
+
+  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  @@map("server_stats")
+}

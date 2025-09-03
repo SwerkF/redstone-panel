@@ -1,0 +1,24 @@
+# Workspace
+minecraft-servers.code-workspace
+
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
