@@ -1,11 +1,11 @@
 import { serverProperties } from '#assets/server.properties'
-import KubeService from '#config/kube'
 import prisma from '#config/prisma'
+import KubeService from '#core/services/kube'
 import { Offer, ServerStatus } from '#generated/client'
 import { uuidv4 } from '#utils/uuid'
 
 export default class ServerService {
-	private kubeService = new KubeService()
+	constructor(private kubeService: KubeService) {}
 
 	async createServer(userId: number, offer: Offer) {
 		const subscription = await prisma.userSubscription.create({

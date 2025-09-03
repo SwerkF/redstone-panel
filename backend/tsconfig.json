@@ -2,6 +2,32 @@
 	"extends": "@adonisjs/tsconfig/tsconfig.app.json",
 	"compilerOptions": {
 		"rootDir": "./",
-		"outDir": "./build"
+		"outDir": "./build",
+		"baseUrl": "./",
+		"paths": {
+			"#controllers/*": ["./app/controllers/*"],
+			"#exceptions/*": ["./app/exceptions/*"],
+			"#mails/*": ["./app/mails/*"],
+			"#services/*": ["./app/services/*"],
+			"#listeners/*": ["./app/listeners/*"],
+			"#events/*": ["./app/events/*"],
+			"#middleware/*": ["./app/middleware/*"],
+			"#validators/*": ["./app/validators/*"],
+			"#providers/*": ["./providers/*"],
+			"#policies/*": ["./app/policies/*"],
+			"#abilities/*": ["./app/abilities/*"],
+			"#database/*": ["./database/*"],
+			"#start/*": ["./start/*"],
+			"#tests/*": ["./tests/*"],
+			"#config/*": ["./config/*"],
+			"#auth/*": ["./app/auth/*"],
+			"#offers/*": ["./app/offers/*"],
+			"#server/*": ["./app/server/*"],
+			"#utils/*": ["./utils/*"],
+			"#generated/*": ["./prisma/generated/*"],
+			"#core/*": ["./app/core/*"],
+			"#types/*": ["./types/*"],
+			"#assets/*": ["./assets/*"]
+		}
 	}
 }

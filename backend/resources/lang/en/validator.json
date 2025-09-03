@@ -1,0 +1,15 @@
+{
+	"shared": {
+		"fields": {
+			"email": "email",
+			"password": "password",
+			"refreshToken": "refresh token"
+		},
+		"messages": {
+			"required": "The {field} field is required",
+			"email": "The {field} must be a valid email address",
+			"string": "The {field} must be a string",
+			"minLength": "The {field} must be at least {minLength} characters long"
+		}
+	}
+}

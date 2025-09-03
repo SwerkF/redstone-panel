@@ -1,0 +1,24 @@
+{
+	"auth": {
+		"user_created": "Utilisateur créé avec succès",
+		"login_successful": "Connexion réussie",
+		"tokens_refreshed": "Tokens rafraîchis avec succès",
+		"logout_successful": "Déconnexion réussie",
+		"invalid_credentials": "Identifiants invalides",
+		"user_not_authenticated": "Utilisateur non authentifié",
+		"user_not_found": "Utilisateur non trouvé",
+		"tokens_cleanup_completed": "Nettoyage des tokens expirés terminé"
+	},
+	"offers": {
+		"offer_not_found": "Offre non trouvée"
+	},
+	"server": {
+		"test_successful": "Test réussi"
+	},
+	"errors": {
+		"validation_error": "Erreur de validation",
+		"unauthorized_access": "Accès non autorisé",
+		"internal_server_error": "Erreur interne du serveur",
+		"unexpected_error": "Une erreur inattendue s'est produite"
+	}
+}

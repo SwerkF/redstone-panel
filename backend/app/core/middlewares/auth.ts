@@ -1,11 +1,8 @@
-/**
- * Middleware d'authentification JWT simple
- * Vérifie les tokens JWT pour les routes protégées
- */
+import type { HttpContext } from '@adonisjs/core/http'
+import logger from '@adonisjs/core/services/logger'
+import type { NextFn } from '@adonisjs/core/types/http'
 
 import AuthService from '#auth/service'
-import type { HttpContext } from '@adonisjs/core/http'
-import type { NextFn } from '@adonisjs/core/types/http'
 
 export default class AuthMiddleware {
 	async handle(ctx: HttpContext, next: NextFn) {
@@ -34,6 +31,7 @@ export default class AuthMiddleware {
 
 			await next()
 		} catch (error) {
+			logger.error(error)
 			return response.unauthorized({
 				message: 'Token invalide ou expiré',
 				error: 'INVALID_TOKEN',

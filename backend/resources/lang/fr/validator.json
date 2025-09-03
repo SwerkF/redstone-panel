@@ -1,0 +1,15 @@
+{
+	"shared": {
+		"fields": {
+			"email": "email",
+			"password": "mot de passe",
+			"refreshToken": "token de rafraîchissement"
+		},
+		"messages": {
+			"required": "Le champ {field} est requis",
+			"email": "Le champ {field} doit être une adresse email valide",
+			"string": "Le champ {field} doit être une chaîne de caractères",
+			"minLength": "Le champ {field} doit contenir au moins {minLength} caractères"
+		}
+	}
+}

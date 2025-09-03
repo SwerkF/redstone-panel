@@ -1,13 +1,10 @@
-/**
- * Service d'authentification JWT
- * Gère l'authentification avec access token et refresh token
- */
+import jwt from 'jsonwebtoken'
+
+import hash from '@adonisjs/core/services/hash'
 
 import { AuthTokens, JwtPayload, UserResponse } from '#auth/types'
 import prisma from '#config/prisma'
 import env from '#start/env'
-import hash from '@adonisjs/core/services/hash'
-import jwt from 'jsonwebtoken'
 
 export default class AuthService {
 	private readonly JWT_ACCESS_SECRET = env.get('JWT_ACCESS_SECRET')

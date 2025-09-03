@@ -6,10 +6,10 @@
 | Le fichier de routes sert à définir les routes HTTP.
 |
 */
+import router from '@adonisjs/core/services/router'
 
 import '#auth/routes'
 import '#offers/routes'
-import router from '@adonisjs/core/services/router'
 
 router.get('/', async () => {
 	return {

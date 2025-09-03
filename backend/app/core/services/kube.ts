@@ -1,6 +1,8 @@
-import { Prisma } from '#generated/index'
-
 import * as k8s from '@kubernetes/client-node'
+
+import logger from '@adonisjs/core/services/logger'
+
+import { Prisma } from '#generated/index'
 
 export default class kubeService {
 	private k8sApi: k8s.CoreV1Api
@@ -12,7 +14,7 @@ export default class kubeService {
 		try {
 			this.kubeConfig.loadFromDefault()
 		} catch (error) {
-			console.error(
+			logger.error(
 				'Error while loading the Kubernetes configuration:',
 				error,
 			)
@@ -37,7 +39,7 @@ export default class kubeService {
 			await this.k8sApi.listNamespace()
 			return true
 		} catch (error) {
-			console.error(
+			logger.error(
 				'Error while checking the connection to the Kubernetes cluster:',
 				error,
 			)
@@ -140,14 +142,22 @@ export default class kubeService {
 				},
 			}
 
+			logger.info(
+				`Service created for server ${server.serverId} with node port ${nodePort}`,
+			)
+
 			const service = await this.k8sApi.createNamespacedService({
 				namespace: 'default',
 				body: serviceManifest,
 			})
 
+			logger.info(
+				`Service created for server ${server.serverId} with node port ${nodePort}`,
+			)
+
 			return { pod, service, nodePort }
 		} catch (error) {
-			console.error('Error while creating the server:', error)
+			logger.error('Error while creating the server:', error)
 			throw error
 		}
 	}
@@ -174,7 +184,7 @@ export default class kubeService {
 				}
 			}
 		} catch (error) {
-			console.error('Error while retrieving the host IP:', error)
+			logger.error('Error while retrieving the host IP:', error)
 		}
 
 		return 'localhost'
@@ -201,6 +211,7 @@ export default class kubeService {
 			}
 		}
 
+		logger.error('No port available in the NodePort range 30000-32767')
 		throw new Error('No port available in the NodePort range 30000-32767')
 	}
 }

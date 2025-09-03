@@ -1,5 +1,7 @@
-import handler from '#config/handler'
 import { inject } from '@adonisjs/core'
+import { HttpContext } from '@adonisjs/core/http'
+import i18nManager from '@adonisjs/i18n/services/main'
+
 import AuthService from './service.js'
 import {
 	loginValidator,
@@ -9,62 +11,80 @@ import {
 
 @inject()
 export default class AuthController {
-	private authService = new AuthService()
+	constructor(private authService: AuthService) {}
 
-	register = handler(async ({ request, response }) => {
+	async register(ctx: HttpContext) {
+		const { request, response } = ctx
+		const i18n = ctx.i18n || i18nManager.locale('en')
+
 		const payload = await request.validateUsing(registerValidator)
 		const result = await this.authService.register(payload)
 
 		return response.created({
-			message: 'User created successfully',
+			message: i18n.t('messages.auth.user_created'),
 			user: result.user,
 			tokens: result.tokens,
 		})
-	})
+	}
 
-	login = handler(async ({ request, response }) => {
+	async login(ctx: HttpContext) {
+		const { request, response } = ctx
+		const i18n = ctx.i18n || i18nManager.locale('en')
+
 		const payload = await request.validateUsing(loginValidator)
 		const result = await this.authService.login(
 			payload.email,
 			payload.password,
 		)
+
 		if (!result) {
 			return response.unauthorized({
-				message: 'Invalid credentials',
+				message: i18n.t('messages.auth.invalid_credentials'),
 			})
 		}
+
 		return response.ok({
-			message: 'Login successful',
+			message: i18n.t('messages.auth.login_successful'),
 			user: result.user,
 			tokens: result.tokens,
 		})
-	})
+	}
 
-	refresh = handler(async ({ request, response }) => {
+	async refresh(ctx: HttpContext) {
+		const { request, response } = ctx
+		const i18n = ctx.i18n || i18nManager.locale('en')
+
 		const payload = await request.validateUsing(refreshTokenValidator)
 		const result = await this.authService.refreshTokens(
 			payload.refreshToken,
 		)
+
 		return response.ok({
-			message: 'Tokens refreshed successfully',
+			message: i18n.t('messages.auth.tokens_refreshed'),
 			user: result.user,
 			tokens: result.tokens,
 		})
-	})
+	}
 
-	logout = handler(async ({ request, response }) => {
+	async logout(ctx: HttpContext) {
+		const { request, response } = ctx
+		const i18n = ctx.i18n || i18nManager.locale('en')
+
 		const refreshToken = request.input('refreshToken')
-		const result = await this.authService.logout(refreshToken)
+		await this.authService.logout(refreshToken)
 
-		return response.ok(result)
-	})
+		return response.ok({
+			message: i18n.t('messages.auth.logout_successful'),
+		})
+	}
 
-	me = handler(async ctx => {
+	async me(ctx: HttpContext) {
 		const { response } = ctx
+		const i18n = ctx.i18n || i18nManager.locale('en')
 
 		if (!ctx.user) {
 			return response.unauthorized({
-				message: 'Utilisateur non authentifié',
+				message: i18n.t('messages.auth.user_not_authenticated'),
 			})
 		}
 
@@ -72,25 +92,22 @@ export default class AuthController {
 
 		if (!user) {
 			return response.notFound({
-				message: 'Utilisateur non trouvé',
+				message: i18n.t('messages.auth.user_not_found'),
 			})
 		}
 
 		return response.ok({
 			user,
 		})
-	})
+	}
 
-	cleanupTokens = handler(async ({ response }) => {
+	async cleanupTokens(ctx: HttpContext) {
+		const { response } = ctx
+		const i18n = ctx.i18n || i18nManager.locale('en')
+
 		await this.authService.cleanupExpiredTokens()
 		return response.ok({
-			message: 'Expired tokens cleanup completed',
+			message: i18n.t('messages.auth.tokens_cleanup_completed'),
 		})
-	})
-
-	test = handler(async ({ response }) => {
-		return response.ok({
-			message: 'Test successful',
-		})
-	})
+	}
 }
