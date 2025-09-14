@@ -1,8 +1,14 @@
+import { BrowserRouter } from 'react-router-dom'
+
+import { AppContent, AuthProvider } from './router'
+
 function App() {
 	return (
-		<div>
-			<h1>Hello World</h1>
-		</div>
+		<AuthProvider>
+			<BrowserRouter>
+				<AppContent />
+			</BrowserRouter>
+		</AuthProvider>
 	)
 }
 
