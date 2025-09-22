@@ -25,7 +25,8 @@ export default class HttpExceptionHandler extends ExceptionHandler {
 			})
 		}
 
-		logger.error("Erreur capturée par le gestionnaire d'exceptions:", error)
+		logger.error("Erreur capturée par le gestionnaire d'exceptions")
+		logger.error(error)
 
 		if (app.inProduction) {
 			return response.internalServerError({
