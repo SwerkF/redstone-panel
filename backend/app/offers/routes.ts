@@ -8,7 +8,7 @@ router
 	.group(() => {
 		router.get('/', [OfferController, 'getAllOffers'])
 		router
-			.post('/purchase/:offerId', [OfferController, 'purchaseOffer'])
+			.post('/:offerId/purchase', [OfferController, 'purchaseOffer'])
 			.middleware([middleware.auth()])
 	})
 	.prefix('/offers')

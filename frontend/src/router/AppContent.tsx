@@ -1,10 +1,10 @@
 import { useMetadata } from '@/utils/helmet'
 
-import { PrivateRoutes } from './PrivateRoutes'
-import { PublicRoutes } from './PublicRoutes'
+import { PrivateRoutes, PublicRoutes } from '@/router'
 
-import { Navbar } from '../components'
-import { useIsAuthenticated, useIsInitialized } from '../store/authStore'
+import { Navbar } from '@/components'
+import { useIsAuthenticated, useIsInitialized } from '@/store/authStore'
+import { Fragment } from 'react'
 
 const LoadingSpinner = () => (
 	<div className="flex items-center justify-center min-h-screen">
@@ -27,9 +27,12 @@ export const AppContent = () => {
 	}
 
 	return (
-		<>
+		<Fragment>
 			<Navbar />
-			{isAuthenticated ? <PrivateRoutes /> : <PublicRoutes />}
-		</>
+			<div className="container mx-auto py-4">
+				{isAuthenticated && <PrivateRoutes /> }
+				<PublicRoutes />
+			</div>
+		</Fragment>
 	)
 }

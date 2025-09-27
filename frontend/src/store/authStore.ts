@@ -2,8 +2,8 @@ import Cookies from 'js-cookie'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
-import authApi from '../api/auth/api'
-import type { LoginForm, RegisterForm, User } from '../api/auth/types'
+import { authApi } from '@/api/auth'
+import type { LoginForm, RegisterForm, User } from '@/api/auth'
 
 interface AuthState {
 	user: User | null
@@ -120,7 +120,7 @@ export const useAuthStore = create<AuthStore>()(
 						const response = await authApi.me()
 
 						set({
-							user: response.user,
+							user: response,
 							isAuthenticated: true,
 							isLoading: false,
 							isInitialized: true,

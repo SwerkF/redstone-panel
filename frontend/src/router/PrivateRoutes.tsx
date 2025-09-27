@@ -18,7 +18,6 @@ export const PrivateRoutes = () => {
 	return (
 		<Routes>
 			<Route path="/dashboard/*" element={<MainDashboard />} />
-			<Route path="*" element={<Navigate to="/dashboard" replace />} />
 		</Routes>
 	)
 }

@@ -1,5 +1,8 @@
+import { inject } from '@adonisjs/core'
+
 import prisma from '#config/prisma'
 
+@inject()
 export default class OfferService {
 	async getAllOffers() {
 		const offers = await prisma.offer.findMany()
