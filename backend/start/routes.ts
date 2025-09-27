@@ -12,13 +12,13 @@ import '#auth/routes'
 import '#offers/routes'
 
 router.get('/', async () => {
-	return {
-		message: 'Hello World',
-	}
+    return {
+        message: 'Hello World',
+    }
 })
 
 router.get('/health', async () => {
-	return {
-		status: 'ok',
-	}
+    return {
+        status: 'ok',
+    }
 })

@@ -22,10 +22,10 @@ server.errorHandler(() => import('#core/exceptions/handler'))
  * the request URL.
  */
 server.use([
-	() => import('#core/middlewares/container_bindings_middleware'),
-	() => import('#core/middlewares/force_json_response_middleware'),
-	() => import('@adonisjs/cors/cors_middleware'),
-	() => import('#core/middlewares/detect_user_locale_middleware'),
+    () => import('#core/middlewares/container_bindings_middleware'),
+    () => import('#core/middlewares/force_json_response_middleware'),
+    () => import('@adonisjs/cors/cors_middleware'),
+    () => import('#core/middlewares/detect_user_locale_middleware'),
 ])
 
 /**
@@ -39,5 +39,5 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware')])
  * the routes or the routes group.
  */
 export const middleware = router.named({
-	auth: () => import('#core/middlewares/auth'),
+    auth: () => import('#core/middlewares/auth'),
 })
