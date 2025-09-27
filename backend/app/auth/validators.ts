@@ -4,7 +4,13 @@ export const registerValidator = vine.compile(
 	vine.object({
 		email: vine.string().email().normalizeEmail(),
 		username: vine.string().minLength(3).maxLength(50),
-		password: vine.string().minLength(6).maxLength(100),
+		password: vine
+			.string()
+			.minLength(8)
+			.maxLength(100)
+			.regex(
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?]).{8,}$/,
+			),
 	}),
 )
 
